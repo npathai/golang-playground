@@ -40,4 +40,33 @@ func main() {
 	for n:= 0; n < 5; n++ {
 		println(n)
 	}
+
+	// Creating infinite loops
+	var p int
+	for {
+		if p == 5 {
+			break
+		}
+		p++
+		println(p)
+	}
+
+	// Iterating a collection
+	arr := []int{1, 2}
+
+	println("Iterating a collection")
+	for l := 0; l < len(arr); l++ {
+		println(arr[l])
+	}
+
+	println("Better way of iterating a collection")
+	for k, v := range arr {
+		println(k, v)
+	}
+
+	println("Iterating over a map")
+	someMap := map[string]int{"ABC": 123}
+	for key, val := range someMap {
+		println(key, val)
+	}
 }
