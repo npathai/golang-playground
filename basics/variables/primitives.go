@@ -27,4 +27,8 @@ func main() {
 	// Pull out the real and imaginary component of complex data type
 	r, im := real(c), imag(c)
 	fmt.Println(r, im)
+
+	// Printing the type of the variable
+	truthy := false
+	fmt.Printf("%v, %T\n\n", truthy, truthy)
 }
