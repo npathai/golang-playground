@@ -25,7 +25,11 @@ func main() {
 		fmt.Println(<-ch)
 		// After receiving 3 messages that the senders send. Post the channel is closed the the reader will start receiving '0' value
 		// We need some mechanism on reader's side to know when a channel is closed
-		fmt.Println(<-ch)
+
+		// Using the comma ok syntax to check if legitimate 0 was written by sender or the channel is closed
+		if msg, ok := <- ch; ok {
+			fmt.Println(msg)
+		}
 		wg.Done()
 	}(ch, wg)
 
