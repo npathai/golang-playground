@@ -7,7 +7,11 @@ import (
 
 func main() {
 	wg := &sync.WaitGroup{}
-	ch := make(chan int)
+	// Creates unbuffered channel
+	//ch := make(chan int)
+
+	// Creating a unbuffered channel
+	ch := make(chan int, 1)
 
 	wg.Add(2)
 
@@ -23,6 +27,7 @@ func main() {
 	go func(ch chan int, wg *sync.WaitGroup) {
 		// ch <- int is for writing to the channel
 		ch <- 42
+		ch <- 27
 		wg.Done()
 	}(ch, wg)
 
