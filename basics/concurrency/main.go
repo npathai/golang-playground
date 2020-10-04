@@ -13,7 +13,7 @@ var rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 func main() {
 	wg := &sync.WaitGroup{}
-	m := &sync.Mutex{}
+	m := &sync.RWMutex{}
 
 	for i := 0; i < 10; i++ {
 		id := rnd.Intn(6) + 1
@@ -21,7 +21,7 @@ func main() {
 		wg.Add(2)
 		// adding go keyword in front of the function makes it go routine, or like a Runnable.
 		// Anonymous function and immediate call
-		go func(id int, wg *sync.WaitGroup, m *sync.Mutex) {
+		go func(id int, wg *sync.WaitGroup, m *sync.RWMutex) {
 			if b, ok := queryCache(id, m); ok {
 				fmt.Println("From cache")
 				fmt.Println(b)
@@ -30,7 +30,7 @@ func main() {
 			wg.Done()
 		}(id, wg, m)
 
-		go func(id int, wg *sync.WaitGroup, m *sync.Mutex) {
+		go func(id int, wg *sync.WaitGroup, m *sync.RWMutex) {
 			if b, ok := queryDatabase(id, m); ok {
 				fmt.Println("From database")
 				fmt.Println(b)
@@ -43,14 +43,15 @@ func main() {
 	wg.Wait()
 }
 
-func queryCache(id int, m *sync.Mutex) (book.Book, bool) {
-	m.Lock()
+func queryCache(id int, m *sync.RWMutex) (book.Book, bool) {
+	// Getting read lock to cache (shared memory)
+	m.RLock()
 	book, ok := cache[id]
-	m.Unlock()
+	m.RUnlock()
 	return book, ok
 }
 
-func queryDatabase(id int, m *sync.Mutex) (book.Book, bool) {
+func queryDatabase(id int, m *sync.RWMutex) (book.Book, bool) {
 	// Simulate lag
 	time.Sleep(100 * time.Millisecond)
 	for _, b := range book.Books {
