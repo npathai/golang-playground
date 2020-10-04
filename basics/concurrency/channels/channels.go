@@ -53,4 +53,29 @@ func main() {
 	}(ch, wg)
 
 	wg.Wait()
+
+
+	wg1 := &sync.WaitGroup{}
+	ch1 := make(chan int)
+
+	wg1.Add(2)
+
+	// Writer routine
+	go func(ch chan<- int, wg *sync.WaitGroup) {
+		for i := 0; i < 10; i++ {
+			ch <- i
+		}
+		close(ch)
+		wg.Done()
+	}(ch1, wg1)
+
+	// Reader routine
+	go func(ch <-chan int, wg *sync.WaitGroup) {
+		for msg := range ch {
+			fmt.Println(msg)
+		}
+		wg.Done()
+	}(ch1, wg1)
+
+	wg1.Wait()
 }
