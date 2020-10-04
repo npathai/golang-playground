@@ -11,9 +11,9 @@ func main() {
 	//ch := make(chan int)
 
 	// Creating a unbuffered channel
-	ch := make(chan int, 1)
+	ch := make(chan int, 2)
 
-	wg.Add(2)
+	wg.Add(3)
 
 	// Receiver routine
 	go func(ch chan int, wg *sync.WaitGroup) {
@@ -28,6 +28,12 @@ func main() {
 		// ch <- int is for writing to the channel
 		ch <- 42
 		ch <- 27
+		wg.Done()
+	}(ch, wg)
+
+	// Sender routine which receives send only channel. Notice ch <- syntax
+	go func(ch chan<- int, wg *sync.WaitGroup) {
+		ch <- 100
 		wg.Done()
 	}(ch, wg)
 
