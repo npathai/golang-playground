@@ -1,9 +1,9 @@
 package main
 
 import (
+	"../../payment/objectoriented"
 	"fmt"
 	"strings"
-	"../../payment/objectoriented"
 )
 
 func main() {
